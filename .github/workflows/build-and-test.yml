@@ -20,15 +20,18 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj.csproj
+      run: dotnet restore ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
     - name: Build
-      run: dotnet build ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj.csproj
+      run: dotnet build ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
     - name: Test
-      run: dotnet test ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj.csproj --no-build --verbosity normal
+      run: dotnet test ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj --no-build --verbosity normal
       
   build-and-test-frontend:
     name: Build And Test (Angular)
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./angular
     steps:
     - name: Checkout
       uses: actions/checkout@v2
