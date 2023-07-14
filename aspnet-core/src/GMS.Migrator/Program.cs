@@ -10,6 +10,7 @@ namespace GMS.Migrator
     public class Program
     {
         private static bool _quietMode;
+        private static string _environmentName;
 
         public static void Main(string[] args)
         {
@@ -26,8 +27,8 @@ namespace GMS.Migrator
 
                 using (var migrateExecuter = bootstrapper.IocManager.ResolveAsDisposable<MultiTenantMigrateExecuter>())
                 {
-                    var migrationSucceeded = migrateExecuter.Object.Run(_quietMode);
-                    
+                    var migrationSucceeded = migrateExecuter.Object.Run(_quietMode, "Production");
+
                     if (_quietMode)
                     {
                         // exit clean (with exit code 0) if migration is a success, otherwise exit with code 1
@@ -56,6 +57,12 @@ namespace GMS.Migrator
                 {
                     case "-q":
                         _quietMode = true;
+                        break;
+                    case "-prod":
+                        _environmentName = "Production";
+                        break;
+                    case "-dev":
+                        _environmentName = "Staging";
                         break;
                 }
             }

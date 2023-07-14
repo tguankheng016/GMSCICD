@@ -1,0 +1,13 @@
+name: Check Is Valid Branch
+description: Specific steps to build for Windows
+inputs:
+  branch_name:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Fail if branch is not ${{ branch_name }}
+      if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/${{ branch_name }}'
+      run: |
+        echo "This workflow should not be triggered with workflow_dispatch on a branch other than ${{ branch_name }}"
+        exit 1

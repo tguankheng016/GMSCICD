@@ -47,6 +47,9 @@ namespace GMS.Tests.Users
                 var johnNashUser = await context.Users.FirstOrDefaultAsync(u => u.UserName == "john.nash");
                 johnNashUser.ShouldNotBeNull();
             });
+            
+            //Wont trigger actions
+            Assert.True(true);
         }
     }
 }

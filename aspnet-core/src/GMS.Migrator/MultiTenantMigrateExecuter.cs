@@ -1,16 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using Abp.Configuration.Startup;
 using Abp.Data;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.MultiTenancy;
+using Abp.Reflection.Extensions;
 using Abp.Runtime.Security;
+using GMS.Configuration;
 using GMS.EntityFrameworkCore;
 using GMS.EntityFrameworkCore.Seed;
 using GMS.MultiTenancy;
+using Microsoft.Extensions.Configuration;
 
 namespace GMS.Migrator
 {
@@ -20,22 +24,31 @@ namespace GMS.Migrator
         private readonly AbpZeroDbMigrator _migrator;
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IDbPerTenantConnectionStringResolver _connectionStringResolver;
+        private IConfigurationRoot _appConfiguration;
+        private IAbpStartupConfiguration _configuration;
 
         public MultiTenantMigrateExecuter(
             AbpZeroDbMigrator migrator,
             IRepository<Tenant> tenantRepository,
             Log log,
-            IDbPerTenantConnectionStringResolver connectionStringResolver)
+            IDbPerTenantConnectionStringResolver connectionStringResolver,
+            IAbpStartupConfiguration configuration)
         {
             _log = log;
 
             _migrator = migrator;
             _tenantRepository = tenantRepository;
             _connectionStringResolver = connectionStringResolver;
+            _configuration = configuration;
         }
 
-        public bool Run(bool skipConnVerification)
+        public bool Run(bool skipConnVerification, string environmentName = null)
         {
+            if (!string.IsNullOrEmpty(environmentName))
+            {
+                ResetConnectionString(environmentName);
+            }
+
             var hostConnStr = CensorConnectionString(_connectionStringResolver.GetNameOrConnectionString(new ConnectionStringResolveArgs(MultiTenancySides.Host)));
             if (hostConnStr.IsNullOrWhiteSpace())
             {
@@ -110,6 +123,19 @@ namespace GMS.Migrator
             _log.Write("All databases have been migrated.");
 
             return true;
+        }
+
+        private void ResetConnectionString(string environmentName)
+        {
+            _appConfiguration = AppConfigurations.Get(
+                typeof(GMSMigratorModule).GetAssembly().GetDirectoryPathOrNull(),
+                environmentName
+            );
+
+            //Reassign Default Connstring
+            _configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(
+                GMSConsts.ConnectionStringName
+            );
         }
 
         private static string CensorConnectionString(string connectionString)
