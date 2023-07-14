@@ -11,3 +11,4 @@ runs:
       run: |
         echo "This workflow should not be triggered with workflow_dispatch on a branch other than ${{ inputs.branch_name }}"
         exit 1
+      shell: bash
