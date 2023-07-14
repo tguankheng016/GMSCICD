@@ -6,6 +6,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - run: |
+        echo "${{ github.ref }}"
+      shell: bash
+    - run: |
+        echo "refs/heads/${{ inputs.branch_name }}"
+      shell: bash
     - name: Fail if branch is not correct
       if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/${{ inputs.branch_name }}'
       run: |
