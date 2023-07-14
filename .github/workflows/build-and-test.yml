@@ -10,6 +10,16 @@ on:
   workflow_dispatch:
 
 jobs:
+  check-is-valid-branch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fail if branch is not dev
+      if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/dev'
+      run: |
+        echo "${{ github.ref }}"
+        echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"
+        exit 1
+        
   build-and-test-backend:
     name: Build And Test (.Net)
     runs-on: ubuntu-latest
