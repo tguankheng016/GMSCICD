@@ -9,7 +9,10 @@ runs:
         dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
+      shell: bash
     - name: Build
       run: dotnet build ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
+      shell: bash
     - name: Test
       run: dotnet test ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj --no-build --verbosity normal
+      shell: bash
