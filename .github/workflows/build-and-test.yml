@@ -24,32 +24,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ./.github/actions/build-and-test-backend
-      
-  build-frontend:
-    name: Build And Test (Angular)
-    runs-on: ubuntu-latest
+    
+  deploy-staging:
+    name: Build and Deploy Staging
     needs: [build-and-test-backend]
-    defaults:
-      run:
-        working-directory: ./angular
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-
-    - name: Install dependencies
-      run: yarn
-
-    - name: Build dist
-      run: npm run publish
-      
-  deploy-staging:
-    name: Build and Deploy Staging
-    needs: [build-and-test-backend, build-frontend]
-    runs-on: windows-latest
-    steps:
+    - uses: ./.github/actions/build-and-publish-frontend
     - run: echo "Deployed Staging"
