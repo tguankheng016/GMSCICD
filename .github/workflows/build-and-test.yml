@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-is-valid-branch]
     steps:
+    - uses: actions/checkout@v2
     - uses: ./.github/actions/build-and-test-backend
       
   build-frontend:
