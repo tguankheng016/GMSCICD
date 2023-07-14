@@ -13,7 +13,7 @@ runs:
     - run: echo ${{ github.ref == format('refs/heads/{0}', inputs.branch_name) }}
       shell: bash
     - name: Fail if branch is not correct
-      if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/${{ inputs.branch_name }}' }}
+      if: ${{ github.event_name == 'workflow_dispatch' && github.ref != format('refs/heads/{0}', inputs.branch_name) }}
       run: |
         echo "This workflow should not be triggered with workflow_dispatch on a branch other than ${{ inputs.branch_name }}"
         exit 1
