@@ -1,5 +1,5 @@
 name: Check Is Valid Branch
-description: Specific steps to build for Windows
+description: To check the manual workflow is runnable for the selected branch or not
 inputs:
   branch_name:
     required: true

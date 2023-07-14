@@ -1,0 +1,17 @@
+name: Build And Test (.Net)
+description: Build on test project and run unit test
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
+    - name: Build
+      run: dotnet build ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj
+    - name: Test
+      run: dotnet test ./aspnet-core/test/GMS.Tests/GMS.Tests.csproj --no-build --verbosity normal
