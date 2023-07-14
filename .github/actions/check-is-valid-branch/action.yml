@@ -10,7 +10,7 @@ runs:
       shell: bash
     - run: echo "refs/heads/${{ inputs.branch_name }}"
       shell: bash
-    - run: echo ${{ github.ref != 'refs/heads/${{ inputs.branch_name }}'}}
+    - run: echo ${{ github.ref == 'refs/heads/${{ inputs.branch_name }}'}}
       shell: bash
     - name: Fail if branch is not correct
       if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/${{ inputs.branch_name }}' }}
