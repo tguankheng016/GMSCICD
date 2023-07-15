@@ -1,0 +1,14 @@
+name: "Deploy Profuction"
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-on-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: echo "Deployed Production"

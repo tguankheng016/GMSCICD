@@ -11,6 +11,8 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <LangVersion>7.2</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
+	<SpaRoot>..\..\..\angular</SpaRoot>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\swagger\ui\index.html" />
@@ -43,4 +45,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
+    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+	    <ItemGroup>
+		    <DistFiles Include="wwwroot\ClientApp\**;" />
+		    <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+			    <RelativePath>%(DistFiles.Identity)</RelativePath>
+			    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		    </ResolvedFileToPublish>
+	    </ItemGroup>
+    </Target>
 </Project>
