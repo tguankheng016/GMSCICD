@@ -7,15 +7,15 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
-    - name: Navigate to angular folder
+        
+    - name: Install dependencies
       run: |
         cd ./angular
-      shell: bash
-
-    - name: Install dependencies
-      run: yarn
+        yarn
       shell: bash
 
     - name: Build dist
-      run: npm run publish
+      run: |
+        cd ./angular
+        npm run publish
       shell: bash
