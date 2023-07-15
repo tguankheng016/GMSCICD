@@ -7,6 +7,9 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
+    - name: Navigate to angular folder
+      run: |
+        cd ./angular
 
     - name: Install dependencies
       run: yarn
