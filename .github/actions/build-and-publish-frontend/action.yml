@@ -24,7 +24,9 @@ runs:
       with:
         dotnet-version: 7.0.x
     - name: Publish .Net
-      run: dotnet publish .\aspnet-core\src\GMS.Web.Host\GMS.Web.Host.csproj /p:PublishProfile=.\aspnet-core\src\GMS.Web.Host\Properties\PublishProfiles\FolderProfile.pubxml -c Release
+      run: |
+        cd ./aspnet-core/src/GMS.Web.Host
+        dotnet publish GMS.Web.Host.csproj /p:PublishProfile=.\Properties\PublishProfiles\FolderProfile.pubxml -c Release
       shell: bash
     - name: Upload Publish Folder
       uses: actions/upload-artifact@v3
