@@ -1,0 +1,21 @@
+name: Build And Test (Angular)
+description: Build angular dist folder
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        
+    - name: Install dependencies
+      run: |
+        cd ./angular
+        yarn
+      shell: bash
+
+    - name: Build dist
+      run: |
+        cd ./angular
+        npm run publish
+      shell: bash
