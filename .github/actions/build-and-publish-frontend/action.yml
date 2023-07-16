@@ -1,5 +1,12 @@
 name: Build And Test (Angular)
 description: Build angular dist folder
+inputs:
+  publish-profile:
+    description: 'Publish Profile'
+    required: true
+  publish-angular:
+    description: 'Angular Publish Type'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -17,7 +24,7 @@ runs:
     - name: Build dist
       run: |
         cd ./angular
-        npm run publish
+        npm run ${{ inputs.publish-angular }}
       shell: bash
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -26,7 +33,7 @@ runs:
     - name: Publish .Net
       run: |
         cd ./aspnet-core/src/GMS.Web.Host
-        dotnet publish GMS.Web.Host.csproj /p:PublishProfile=.\Properties\PublishProfiles\FolderProfile.pubxml -c Release
+        dotnet publish GMS.Web.Host.csproj /p:PublishProfile=.\Properties\PublishProfiles\${{ inputs.publish-profile }}.pubxml -c Release
       shell: bash
     - name: Upload Publish Folder
       uses: actions/upload-artifact@v3
