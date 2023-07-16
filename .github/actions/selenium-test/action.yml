@@ -9,6 +9,7 @@ runs:
         dotnet-version: 7.0.x
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@latest
+    - name: Run Chrome
       run: chrome --version
       shell: bash
     - name: Run Selenium Test
