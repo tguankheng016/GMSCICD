@@ -36,4 +36,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - uses: ./.github/actions/build-and-publish-frontend
+      with:
+        publish-profile: ${{ vars.PUBLISH_PROFILE }}
+        publish-angular: ${{ vars.NPM_RUN_COMMAND }}
     - run: echo "Deployed Staging"
