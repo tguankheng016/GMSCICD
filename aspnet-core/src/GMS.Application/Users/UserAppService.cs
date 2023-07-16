@@ -55,7 +55,7 @@ namespace GMS.Users
 
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
         {
-            var test = false;
+            var test = true;
             CheckCreatePermission();
 
             var user = ObjectMapper.Map<User>(input);
