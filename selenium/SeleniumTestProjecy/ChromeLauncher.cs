@@ -14,7 +14,12 @@ namespace SeleniumTestProjecy
 
         public ChromeLauncher()
         {
-            _driver = new ChromeDriver();
+            var options = new ChromeOptions();
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+
+            _driver = new ChromeDriver(options);
             _driver.Manage().Window.Maximize();
         }
 
