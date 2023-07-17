@@ -2,7 +2,7 @@ name: "Deploy Production"
 
 on: 
   release:
-    types: [published]
+    types: [created]
 
 jobs:
   deploy-on-release:
