@@ -2,7 +2,7 @@ name: "Deploy Production"
 
 on: 
   release:
-    types: [created, deleted]
+    types: [deleted]
   workflow_run:
     workflows: ["Create Incremental Release Tag"]
     types:
@@ -22,13 +22,15 @@ jobs:
         uses: actions/checkout@v2
         with: 
           ref: ${{ steps.latest.outputs.tag_name }}
-      - name: Publish Production
-        uses: ./.github/actions/build-and-publish-frontend
-        with:
-          publish-profile: ${{ vars.PUBLISH_PROFILE }}
-          publish-angular: ${{ vars.NPM_RUN_COMMAND }}
+      # - name: Publish Production
+      #   uses: ./.github/actions/build-and-publish-frontend
+      #   with:
+      #     publish-profile: ${{ vars.PUBLISH_PROFILE }}
+      #     publish-angular: ${{ vars.NPM_RUN_COMMAND }}
+      - run: echo "event name is:" ${{ github.event_name }} 
+      - run: echo "event type is:" ${{ github.event.action }} 
       - name: Run Migration
         #Don run migration if is rollback event
-        if: ${{ github.event_name }} == 'workflow_run' && ${{ github.event.action }} == 'completed'
+        if: ${{ github.event_name }} != 'release' && ${{ github.event.action }} != 'deleted'
         run: echo "Run Migration"
       - run: echo "Deployed Production"
