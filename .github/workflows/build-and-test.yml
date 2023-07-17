@@ -27,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: autotelic/action-wait-for-status-check@v1
-        id: wait-for-status
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          statusName: "Run Selenium Tests"
+      id: wait-for-status
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        statusName: "Run Selenium Tests"
     - name: Echo Outputs
       run: |
         echo ${{ steps.wait-for-status.outputs.context }}
