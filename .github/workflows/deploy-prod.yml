@@ -29,6 +29,6 @@ jobs:
           publish-angular: ${{ vars.NPM_RUN_COMMAND }}
       - name: Run Migration
         #Don run migration if is rollback event
-        if: ${{ github.event_name }} != 'release' && ${{ github.event.action }} != 'deleted'
+        if: ${{ github.event_name }} == 'workflow_run' && ${{ github.event.action }} == 'completed'
         run: echo "Run Migration"
       - run: echo "Deployed Production"
