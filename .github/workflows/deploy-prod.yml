@@ -2,7 +2,7 @@ name: "Deploy Production"
 
 on: 
   release:
-    types: [deleted]
+    types: [created, deleted]
   workflow_run:
     workflows: ["Create Incremental Release Tag"]
     types:
