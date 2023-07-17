@@ -1,0 +1,21 @@
+name: Build And Test (Selenium)
+description: Build on selenium test project and run ui test
+runs:
+  using: "composite"
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 7.0.x
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@latest
+    - name: Run Chrome
+      run: chrome --version
+      shell: bash
+    - name: Run Selenium Test
+      run: |
+        cd ./selenium/SeleniumTestProjecy
+        dotnet restore
+        dotnet build
+        dotnet test --no-build --verbosity normal
+      shell: bash

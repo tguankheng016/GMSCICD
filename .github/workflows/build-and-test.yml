@@ -1,4 +1,4 @@
-name: "build and test"
+name: "Build, Test And Deploy To Staging"
 
 on: 
   push:
@@ -31,8 +31,24 @@ jobs:
     name: Build and Deploy Staging
     needs: [build-and-test-backend]
     runs-on: ubuntu-latest
+    environment: staging
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - uses: ./.github/actions/build-and-publish-frontend
+      with:
+        publish-profile: ${{ vars.PUBLISH_PROFILE }}
+        publish-angular: ${{ vars.NPM_RUN_COMMAND }}
+    - name: Run Migration
+      run: echo "Run Migration"
     - run: echo "Deployed Staging"
+  
+  selenium-ui-test:
+    name: Run Selenium Tests
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: ./.github/actions/selenium-test
+    - run: echo "Pass Selenium Tests"
