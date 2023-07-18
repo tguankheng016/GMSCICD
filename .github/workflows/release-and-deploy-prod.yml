@@ -39,21 +39,21 @@ jobs:
       - id: final
         run: | 
           echo "${{ steps.release.outputs.tag_name }}"
-          echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
-          echo "${{ steps.final.outputs.can-skip }}"
+          echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name ||  steps.release.outputs.tag_name == ""  }}" >> "$GITHUB_OUTPUT"
 
   deploy-prod:
     name: Deploy Prod
     runs-on: ubuntu-latest
     environment: production
     needs: [release-and-check-can-deploy]
-    if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == false }}
+    # if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == false }}
     steps:
-      - id: latest
-        name: Get Current Latest Release Version
-        uses: thebritican/fetch-latest-release@v1.0.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "${{ needs.release-and-check-can-deploy.outputs.can-skip }}"
+      # - id: latest
+      #   name: Get Current Latest Release Version
+      #   uses: thebritican/fetch-latest-release@v1.0.3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Publish Production
       #   uses: ./.github/actions/build-and-publish-frontend
       #   with:
