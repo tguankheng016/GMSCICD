@@ -1,13 +1,8 @@
-name: "Deploy Production"
+name: "Rollback To Previous Latest Release"
 
 on: 
   release:
     types: [deleted]
-  workflow_run:
-    workflows: ["Create Incremental Release Tag"]
-    types:
-      - completed
-
 
 jobs:
   deploy-on-release:
@@ -27,10 +22,4 @@ jobs:
       #   with:
       #     publish-profile: ${{ vars.PUBLISH_PROFILE }}
       #     publish-angular: ${{ vars.NPM_RUN_COMMAND }}
-      - run: echo "event name is:" ${{ github.event_name }} 
-      - run: echo "event type is:" ${{ github.event.action }} 
-      - name: Run Migration
-        #Don run migration if is rollback event
-        if: ${{ github.event_name }} != 'release' && ${{ github.event.action }} != 'deleted'
-        run: echo "Run Migration"
       - run: echo "Deployed Production"
