@@ -22,6 +22,8 @@ jobs:
     needs: [check-is-valid-branch]
     outputs:
       can-skip: ${{ steps.final.outputs.can-skip }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - id: latest
         name: Get Current Latest Release Version
@@ -46,8 +48,6 @@ jobs:
     environment: production
     needs: [release-and-check-can-deploy]
     if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == false }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - id: latest
         name: Get Current Latest Release Version
