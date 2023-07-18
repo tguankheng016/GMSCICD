@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-is-valid-branch]
     outputs:
-      can-skip: ${{ steps.release.outputs.can-skip }}
+      can-skip: ${{ steps.final.outputs.can-skip }}
     steps:
       - id: latest
         name: Get Current Latest Release Version
@@ -34,7 +34,8 @@ jobs:
         uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: norelease
-      - run: | 
+      - id: final
+        run: | 
           echo "${{ steps.release.outputs.tag_name }}"
           echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
           echo "${{ can-skip }}"
