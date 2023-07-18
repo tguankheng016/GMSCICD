@@ -27,7 +27,7 @@ namespace GMS.Migrator
 
                 using (var migrateExecuter = bootstrapper.IocManager.ResolveAsDisposable<MultiTenantMigrateExecuter>())
                 {
-                    var migrationSucceeded = migrateExecuter.Object.Run(_quietMode, "Production");
+                    var migrationSucceeded = migrateExecuter.Object.Run(_quietMode, _environmentName);
 
                     if (_quietMode)
                     {
