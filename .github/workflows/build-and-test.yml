@@ -22,24 +22,6 @@ jobs:
       with:
         branch_name: dev
 
-  check-is-statuscheck-running:
-    name: Check Is Status Check Running
-    runs-on: ubuntu-latest
-    needs: [check-is-valid-branch]
-    steps:
-    - uses: autotelic/action-wait-for-status-check@v1
-      id: wait-for-status
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        statusName: "selenium-ui-test"
-        timeoutSeconds: 10
-    - name: Echo Outputs
-      run: |
-        echo ${{ steps.wait-for-status.outputs.context }}
-        echo ${{ steps.wait-for-status.outputs.state }}
-        echo ${{ steps.wait-for-status.outputs.description }}
-        echo ${{ steps.wait-for-status.outputs.target_url }}
-
   build-and-test-backend:
     name: Build And Test Backend
     runs-on: ubuntu-latest
