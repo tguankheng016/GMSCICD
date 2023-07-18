@@ -1,0 +1,62 @@
+name: "Create Incremental Release Tag And Deploy To Production"
+
+on: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-is-valid-branch:
+    name: Check Is Valid Branch
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/actions/check-is-valid-branch
+      with:
+        branch_name: main
+
+  release-and-check-can-deploy:
+    name: Create Incremental Release Tag And Check Can Deploy
+    runs-on: ubuntu-latest
+    needs: [check-is-valid-branch]
+    outputs:
+      can-skip: ${{ steps.release.outputs.can-skip }}
+    steps:
+      - id: latest
+        name: Get Current Latest Release Version
+        uses: thebritican/fetch-latest-release@v1.0.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "${{ steps.latest.outputs.tag_name }}"
+      - id: release
+        name: Create Incremental Release Tag
+        uses: rymndhng/release-on-push-action@master
+        with:
+          bump_version_scheme: norelease
+        run: echo "${{ steps.release.outputs.tag_name }}"
+        run: echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
+        run: echo "${{ can-skip }}"
+
+  deploy-prod:
+    name: Deploy Prod
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [release-and-check-can-deploy]
+    if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == false }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - id: latest
+        name: Get Current Latest Release Version
+        uses: thebritican/fetch-latest-release@v1.0.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Publish Production
+      #   uses: ./.github/actions/build-and-publish-frontend
+      #   with:
+      #     publish-profile: ${{ vars.PUBLISH_PROFILE }}
+      #     publish-angular: ${{ vars.NPM_RUN_COMMAND }}
+      - name: Run Migration
+        run: echo "Run Migration"
+      - run: echo "Deployed Production"
