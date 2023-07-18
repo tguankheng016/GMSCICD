@@ -38,7 +38,7 @@ jobs:
         run: | 
           echo "${{ steps.release.outputs.tag_name }}"
           echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
-          echo "${{ can-skip }}"
+          echo "${{ steps.final.outputs.can-skip }}"
 
   deploy-prod:
     name: Deploy Prod
