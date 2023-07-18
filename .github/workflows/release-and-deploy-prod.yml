@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-is-valid-branch]
     outputs:
-      can-skip: ${{ steps.final.outputs.can-skip }}
+      can-deploy: ${{ steps.final.outputs.can-deploy }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -40,9 +40,9 @@ jobs:
         run: | 
           echo "${{ steps.release.outputs.tag_name }}"
           if [ "${{ steps.release.outputs.tag_name }}" == '' ]; then
-            echo "can-skip=true" >> $GITHUB_OUTPUT;
+            echo "can-deploy=false" >> $GITHUB_OUTPUT;
           else
-            echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> $GITHUB_OUTPUT;
+            echo "can-deploy=${{ steps.release.outputs.tag_name != steps.latest.outputs.tag_name }}" >> $GITHUB_OUTPUT;
           fi
 
   deploy-prod:
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     needs: [release-and-check-can-deploy]
-    if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == 'false' }}
+    if: ${{ needs.release-and-check-can-deploy.outputs.can-deploy == 'true' }}
     steps:
       # - id: latest
       #   name: Get Current Latest Release Version
