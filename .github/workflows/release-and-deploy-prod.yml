@@ -28,15 +28,16 @@ jobs:
         uses: thebritican/fetch-latest-release@v1.0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "${{ steps.latest.outputs.tag_name }}"
+      - run: echo "${{ steps.latest.outputs.tag_name }}"
       - id: release
         name: Create Incremental Release Tag
         uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: norelease
-        run: echo "${{ steps.release.outputs.tag_name }}"
-        run: echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
-        run: echo "${{ can-skip }}"
+      - run: | 
+          echo "${{ steps.release.outputs.tag_name }}"
+          echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> "$GITHUB_OUTPUT"
+          echo "${{ can-skip }}"
 
   deploy-prod:
     name: Deploy Prod
