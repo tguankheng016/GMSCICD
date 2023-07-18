@@ -39,7 +39,11 @@ jobs:
       - id: final
         run: | 
           echo "${{ steps.release.outputs.tag_name }}"
-          echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name ||  steps.release.outputs.tag_name == ""  }}" >> "$GITHUB_OUTPUT"
+          if [ "${{ steps.release.outputs.tag_name }}" == '' ]; then
+            echo "can-skip=true" >> $GITHUB_OUTPUT;
+          else
+            echo "can-skip=${{ steps.release.outputs.tag_name == steps.latest.outputs.tag_name }}" >> $GITHUB_OUTPUT;
+          fi
 
   deploy-prod:
     name: Deploy Prod
@@ -49,6 +53,7 @@ jobs:
     # if: ${{ needs.release-and-check-can-deploy.outputs.can-skip == false }}
     steps:
       - run: echo "${{ needs.release-and-check-can-deploy.outputs.can-skip }}"
+      - run: echo "${{ needs.release-and-check-can-deploy.outputs.can-skip == 'false' }}"
       # - id: latest
       #   name: Get Current Latest Release Version
       #   uses: thebritican/fetch-latest-release@v1.0.3
